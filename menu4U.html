@@ -288,6 +288,10 @@
       <!-- Reservation Tab Content -->
       <div id="reservation-content" class="tab-content">
         <h2>Book a Reservation</h2>
+        <div id="your-reservations" style="margin-bottom:18px;">
+          <h3 style="margin-top:0;">Your Reservations</h3>
+          <ul id="reservation-list" style="padding-left:18px;margin:0;"></ul>
+        </div>
         <div id="reservation-step1">
           <h3>Select a Restaurant</h3>
           <div id="restaurant-list" style="display: flex; gap: 18px; flex-wrap: wrap;">
@@ -323,7 +327,7 @@
         <div id="reservation-success" style="display:none">
           <h3>Reservation Confirmed!</h3>
           <p id="reservation-summary"></p>
-          <button onclick="document.querySelector('.nav-btn[data-nav-tab=home]').click()">Back to Home</button>
+          <button>Back</button>
         </div>
       </div>
 
@@ -424,6 +428,9 @@
     let activeTab = 'home'; // Changed initial active tab to 'home'
     let term = '';
     const deliveryFee = 9;
+
+    // Reservation list to store reservations
+    let reservations = [];
 
     // Elements
     const grid = document.getElementById('grid');
@@ -736,6 +743,24 @@
         alert('Please fill in all fields');
         return;
       }
+      // Date validation
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      const resDate = new Date(date);
+      resDate.setHours(0,0,0,0);
+      if (resDate < today) {
+        alert('make a valid reservation date');
+        return;
+      }
+      // Store reservation
+      const reservationObj = {
+        restaurant,
+        people,
+        date: new Date(date).toLocaleDateString(),
+        time: new Date(date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      reservations.push(reservationObj);
+      renderReservationList();
       document.getElementById('reservation-summary').innerHTML = `
         <strong>Restaurant:</strong> ${restaurant}<br>
         <strong>People:</strong> ${people}<br>
@@ -745,6 +770,24 @@
       document.getElementById('reservation-step2').style.display = 'none';
       document.getElementById('reservation-success').style.display = 'block';
     });
+
+    function renderReservationList() {
+      const list = document.getElementById('reservation-list');
+      if (!list) return;
+      list.innerHTML = '';
+      if (reservations.length === 0) {
+        list.innerHTML = '<li style="color:var(--muted);">No reservations yet.</li>';
+        return;
+      }
+      for (const r of reservations) {
+        const li = document.createElement('li');
+        li.textContent = `${r.date} (${r.people} people) at ${r.restaurant}`;
+        list.appendChild(li);
+      }
+    }
+
+    // Initial render for reservation list
+    renderReservationList();
 
     // Walk-in order grid (demo content)
     const walkinProducts = [
@@ -780,6 +823,12 @@
 
     // Initial render for walk-in products
     renderWalkinProducts();
+
+    // Reservation success 'Back' button
+    document.getElementById('reservation-success').querySelector('button').addEventListener('click', function() {
+      document.getElementById('reservation-success').style.display = 'none';
+      document.getElementById('reservation-step1').style.display = 'block';
+    });
   </script>
 </body>
 </html>
