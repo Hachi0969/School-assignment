@@ -66,7 +66,6 @@
     .hero .promo p{margin:0;font-size:18px;opacity:.95}
     .ellipsis{position:absolute;right:16px;bottom:14px;display:flex;gap:6px}
     .dot{width:8px;height:8px;border-radius:50%;background:#fff;opacity:.85}
-    .hero .photo{position:relative}
     .hero .photo::before{content:"";position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1400&auto=format&fit=crop') center/cover no-repeat;filter:grayscale(.1);}
 
     /* Tabs */
@@ -127,6 +126,76 @@
     .checkout{margin-top:14px;width:100%;padding:12px 16px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;box-shadow: var(--shadow)}
     .checkout:active{transform:translateY(1px)}
 
+    /* New styles for tab content */
+    .tab-content {
+      display: none;
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-top: 20px;
+      background: var(--card);
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .tab-content h2 {
+      margin-top: 0;
+      color: var(--accent);
+    }
+    .order-item, .favorite-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fafafa;
+    }
+    .order-item img, .favorite-item img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .order-item-details, .favorite-item-details {
+      flex-grow: 1;
+    }
+    .order-item-details .name, .favorite-item-details .name {
+      font-weight: 600;
+      font-size: 1.1em;
+    }
+    .order-item-details .price, .favorite-item-details .price {
+      color: var(--muted);
+      font-size: 0.9em;
+    }
+    .order-item-details .qty {
+      font-size: 0.9em;
+      color: var(--muted);
+    }
+    .inbox-message {
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 10px;
+      background: #fafafa;
+    }
+    .inbox-message strong {
+      color: var(--accent);
+    }
+    .settings-option {
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 10px;
+      background: #fafafa;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .settings-option label {
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
@@ -135,48 +204,184 @@
     <aside class="sidebar" aria-label="Sidebar">
       <div class="logo">FD</div>
       <div class="nav-group">
-        <button class="nav-btn active" title="Home" aria-label="Home">🏠</button>
-        <button class="nav-btn" title="Favorites" aria-label="Favorites">❤️</button>
-        <button class="nav-btn" title="Orders" aria-label="Orders">🛒</button>
-        <button class="nav-btn" title="Inbox" aria-label="Inbox">📩</button>
-        <button class="nav-btn" title="Settings" aria-label="Settings">⚙️</button>
+        <button class="nav-btn active" title="Home" aria-label="Home" data-nav-tab="home">🏠</button>
+        <button class="nav-btn" title="Favorites" aria-label="Favorites" data-nav-tab="favorites">❤️</button>
+        <button class="nav-btn" title="Orders" aria-label="Orders" data-nav-tab="orders">🛒</button>
+        <button class="nav-btn" title="Reservation" aria-label="Reservation" data-nav-tab="reservation">🍽️</button>
+        <button class="nav-btn" title="Walk-in Order" aria-label="Walk-in Order" data-nav-tab="walkin">🥢</button>
+        <button class="nav-btn" title="Inbox" aria-label="Inbox" data-nav-tab="inbox">📩</button>
+        <button class="nav-btn" title="Settings" aria-label="Settings" data-nav-tab="settings">⚙️</button>
       </div>
     </aside>
 
     <!-- Main content -->
     <main class="main" id="main">
-      <!-- Search -->
-      <div class="search-row">
-        <div class="search" role="search">
-          <span>🔎</span>
-          <input id="search" type="text" placeholder="What would you like to eat?" />
+      <!-- Home Tab Content -->
+      <div id="home-content" class="tab-content active">
+        <!-- Search -->
+        <div class="search-row">
+          <div class="search" role="search">
+            <span>🔎</span>
+            <input id="search" type="text" placeholder="What would you like to eat?" />
+          </div>
+          <div class="hamburger" id="menuBtn" aria-label="Menu" title="Menu">≡</div>
         </div>
-        <div class="hamburger" id="menuBtn" aria-label="Menu" title="Menu">≡</div>
+
+        <!-- Hero banner -->
+        <section class="hero" aria-label="Promo">
+          <div class="promo">
+            <h2>30% Off</h2>
+            <p>Fitness Meal</p>
+            <div class="ellipsis"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          </div>
+          <div class="photo" aria-hidden="true"></div>
+        </section>
+
+        <!-- Tabs -->
+        <div class="tabs" role="tablist" aria-label="Categories">
+          <button class="tab active" data-tab="nearby" role="tab"><span class="icon">📍</span>Nearby</button>
+          <button class="tab" data-tab="promo" role="tab"><span class="icon">🏷️</span>Promotion</button>
+          <button class="tab" data-tab="new" role="tab"><span class="icon">🆕</span>Newcomers</button>
+          <button class="tab" data-tab="best" role="tab"><span class="icon">⭐</span>Best Seller</button>
+          <button class="tab" data-tab="rated" role="tab"><span class="icon">⬆️</span>Top Rated</button>
+          <button class="tab" data-tab="all" role="tab"><span class="icon">📚</span>All</button>
+        </div>
+        <div class="rule" aria-hidden="true"></div>
+
+        <!-- Product grid -->
+        <section class="grid" id="grid" aria-live="polite"></section>
       </div>
 
-      <!-- Hero banner -->
-      <section class="hero" aria-label="Promo">
-        <div class="promo">
-          <h2>30% Off</h2>
-          <p>Fitness Meal</p>
-          <div class="ellipsis"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+      <!-- Favorites Tab Content -->
+      <div id="favorites-content" class="tab-content">
+        <h2>My Favorites</h2>
+        <div id="favorite-items">
+          <!-- Favorite items will be rendered here -->
         </div>
-        <div class="photo" aria-hidden="true"></div>
-      </section>
-
-      <!-- Tabs -->
-      <div class="tabs" role="tablist" aria-label="Categories">
-        <button class="tab active" data-tab="nearby" role="tab"><span class="icon">📍</span>Nearby</button>
-        <button class="tab" data-tab="promo" role="tab"><span class="icon">🏷️</span>Promotion</button>
-        <button class="tab" data-tab="new" role="tab"><span class="icon">🆕</span>Newcomers</button>
-        <button class="tab" data-tab="best" role="tab"><span class="icon">⭐</span>Best Seller</button>
-        <button class="tab" data-tab="rated" role="tab"><span class="icon">⬆️</span>Top Rated</button>
-        <button class="tab" data-tab="all" role="tab"><span class="icon">📚</span>All</button>
+        <p id="no-favorites-message" style="display: none; color: var(--muted);">No favorite items yet.</p>
       </div>
-      <div class="rule" aria-hidden="true"></div>
 
-      <!-- Product grid -->
-      <section class="grid" id="grid" aria-live="polite"></section>
+      <!-- Orders Tab Content -->
+      <div id="orders-content" class="tab-content">
+        <h2>My Cart Items</h2>
+        <div id="cart-items-list">
+          <!-- Cart items will be rendered here -->
+        </div>
+        <div id="cart-summary" style="margin-top: 20px; padding-top: 15px; border-top: 2px dashed var(--border);">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+            <span>Subtotal:</span>
+            <strong id="orders-subtotal">฿0.00</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+            <span>Delivery Fee:</span>
+            <span id="orders-delivery">฿9.00</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 1.2em; font-weight: bold;">
+            <span>Total:</span>
+            <span id="orders-total">฿9.00</span>
+          </div>
+          <button class="checkout" id="orders-checkout" style="margin-top: 15px; width: 100%;">Check Out</button>
+        </div>
+        <p id="no-cart-message" style="display: none; color: var(--muted);">Your cart is empty. Add some items from the Home tab!</p>
+      </div>
+
+      <!-- Reservation Tab Content -->
+      <div id="reservation-content" class="tab-content">
+        <h2>Book a Reservation</h2>
+        <div id="your-reservations" style="margin-bottom:18px;">
+          <h3 style="margin-top:0;">Your Reservations</h3>
+          <ul id="reservation-list" style="padding-left:18px;margin:0;"></ul>
+        </div>
+        <div id="reservation-step1">
+          <h3>Select a Restaurant</h3>
+          <div id="restaurant-list" style="display: flex; gap: 18px; flex-wrap: wrap;">
+            <div class="card" style="width:220px;cursor:pointer" data-restaurant="Savoey">
+              <div class="thumb"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnJHYTKFF-OZaLh97uTgZlIWfHPk25PwS20g&s" alt="Savoey"></div>
+              <div class="body"><div class="title">Shinkanzen Sushi</div><div class="meta">Bangkok</div></div>
+            </div>
+            <div class="card" style="width:220px;cursor:pointer" data-restaurant="Blue Elephant">
+              <div class="thumb"><img src="data:image/jpeg;base64,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" alt="Blue Elephant"></div>
+              <div class="body"><div class="title">Kub Kao Kub Pla</div><div class="meta">Bangkok</div></div>
+            </div>
+            <div class="card" style="width:220px;cursor:pointer" data-restaurant="Supanniga">
+              <div class="thumb"><img src="https://www.brandbuffet.in.th/wp-content/uploads/2021/09/Suki-Teenoy-4.jpg" alt="Supanniga"></div>
+              <div class="body"><div class="title">Suki Teenoi</div><div class="meta">Bangkok</div></div>
+            </div>
+          </div>
+        </div>
+        <div id="reservation-step2" style="display:none">
+          <h3 id="selected-restaurant"></h3>
+          <label>Number of People:
+            <select id="reservation-people">
+              <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6+</option>
+            </select>
+          </label>
+          <br><br>
+          <label>Date:
+            <input type="date" id="reservation-date">
+          </label>
+          <br><br>
+          <button id="reservation-confirm" class="checkout">Confirm Reservation</button>
+          <button id="reservation-back" style="margin-left:10px">Back</button>
+        </div>
+        <div id="reservation-success" style="display:none">
+          <h3>Reservation Confirmed!</h3>
+          <p id="reservation-summary"></p>
+          <button>Back</button>
+        </div>
+      </div>
+
+      <!-- Walk-in Order Tab Content -->
+      <div id="walkin-content" class="tab-content">
+        <h2>Walk-in Food Order</h2>
+        <div class="card" style="margin-bottom:20px;max-width:500px">
+          <div class="thumb"><img src="https://lh3.googleusercontent.com/gps-cs-s/AC9h4nq_cQnpqVU8SCOS3gc3Yh4yX32jN4YoG40vlurKWRk1u_DqIh9lMIBM0NvLvo6Ia_UKfZLbL1Zb04Dv6VWujHxx26hItTMfWQ1-p3AnCFiBlAiI1UOrzRMWD4sbGtDugUEty4j2Nw=w408-h306-k-no" alt="Thai Restaurant"></div>
+          <div class="body"><div class="title">Welcome to Uncle's Shop!</div><div class="meta">Order at the counter</div></div>
+        </div>
+        <div class="grid" id="walkin-grid"></div>
+        <!-- Separate order/checkout div, not shown here -->
+      </div>
+
+      <!-- Inbox Tab Content -->
+      <div id="inbox-content" class="tab-content">
+        <h2>Inbox</h2>
+        <div class="inbox-message">
+          <strong>Welcome!</strong> Your food delivery journey begins now.
+        </div>
+        <div class="inbox-message">
+          <strong>Special Offer:</strong> Get 15% off your next order with code FOODIE15.
+        </div>
+        <div class="inbox-message">
+          <strong>Delivery Update:</strong> Your order #12345 is on its way!
+        </div>
+        <p style="color: var(--muted);">No new messages.</p>
+      </div>
+
+      <!-- Settings Tab Content -->
+      <div id="settings-content" class="tab-content">
+        <h2>Settings</h2>
+        <div class="settings-option">
+          <label for="notifications">Enable Notifications</label>
+          <input type="checkbox" id="notifications" checked>
+        </div>
+        <div class="settings-option">
+          <label for="dark-mode">Dark Mode</label>
+          <input type="checkbox" id="dark-mode">
+        </div>
+        <div class="settings-option">
+          <label for="payment-methods">Payment Methods</label>
+          <button>Manage</button>
+        </div>
+        <div class="settings-option">
+          <label for="privacy-policy">Privacy Policy</label>
+          <button>View</button>
+        </div>
+        <div class="settings-option">
+          <label for="logout">Logout</label>
+          <button>Logout</button>
+        </div>
+      </div>
+
     </main>
 
     <!-- Order / Cart -->
@@ -193,9 +398,9 @@
       <div class="cart-items" id="cartItems"></div>
 
       <div class="summary">
-        <div class="row"><span>Sub Total</span><strong id="subtotal">$0.00</strong></div>
-        <div class="row"><span>Delivery Fee</span><span id="delivery">$9.00</span></div>
-        <div class="row total"><span>Total</span><span id="total">$9.00</span></div>
+        <div class="row"><span>Sub Total</span><strong id="subtotal">฿0.00</strong></div>
+        <div class="row"><span>Delivery Fee</span><span id="delivery">฿9.00</span></div>
+        <div class="row total"><span>Total</span><span id="total">฿9.00</span></div>
         <button class="checkout" id="checkout">Check Out</button>
       </div>
     </aside>
@@ -206,10 +411,10 @@
     // Data
     // ----------------------------
     const products = [
-      { id: 'p1', name: 'Boat Noodle', price: 39, tag:['promo','best','rated','nearby'], image: 'https://i.pinimg.com/736x/c7/7b/f8/c77bf8513c640f44c307b37a2cfb4d7f.jpg' },
-      { id: 'p2', name: 'Papaya Salad', price: 39, tag:['nearby','rated'], image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3IMfiY4XnZxQUW3Ox68mhjAcj1QXbwg_usQ&s' },
-      { id: 'p3', name: 'Pad thai', price: 39, tag:['new','nearby'], image: 'https://inquiringchef.com/wp-content/uploads/2023/02/Authentic-Pad-Thai_square-1908.jpg' },
-      { id: 'p4', name: 'Ramen Bowl', price: 29, tag:['new','promo'], image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMIepz2ae9Apf9z8L0LpzrLNFT0Wcv5_nHiQ&s' },
+      { id: 'p1', name: 'Tom Yum Soup', price: 39, tag:['promo','best','rated','nearby'], image: 'https://thaicaliente.com/wp-content/uploads/2022/01/Tom-Yum-Goong-Feature.jpg' },
+      { id: 'p2', name: 'Green Curry', price: 39, tag:['nearby','rated'], image: 'https://fullofplants.com/wp-content/uploads/2019/02/easy-vegan-thai-green-curry-spicy-20-minute-gluten-free-thumb-5.jpg' },
+      { id: 'p3', name: 'Pad See Ew', price: 39, tag:['new','nearby'], image: 'https://thai-foodie.com/wp-content/uploads/2025/02/beef-pad-see-ew-plated-1024x1024.jpg' },
+      { id: 'p4', name: 'Massaman Curry', price: 29, tag:['new','promo'], image: 'https://thewoolfskitchen.com/wp-content/uploads/FullSizeRender-2-edited-e1691159377401.jpg' },
       { id: 'p5', name: 'Grilled Chicken', price: 42, tag:['nearby','best'], image: 'https://www.themediterraneandish.com/wp-content/uploads/2020/07/grilled-whole-chicken-recipe-10.jpg' },
       { id: 'p6', name: 'Pancakes', price: 25, tag:['rated','promo'], image: 'https://www.tasteofhome.com/wp-content/uploads/2024/09/Buttermilk-Pancakes_EXPS_TOHVP24_33639_MF_08_15_1_RMS.jpg' },
       { id: 'p7', name: 'Sushi Set', price: 49, tag:['rated','best'], image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrMS4Po_FC1oiyZJH7ANGkWvCzj3Def_X6Fw&s' },
@@ -220,18 +425,27 @@
     // App state
     let favorites = new Set(JSON.parse(localStorage.getItem('favorites')||'[]'));
     let cart = JSON.parse(localStorage.getItem('cart')||'[]'); // [{id,qty,extra}]
-    let activeTab = 'nearby';
+    let activeTab = 'home'; // Changed initial active tab to 'home'
     let term = '';
     const deliveryFee = 9;
+
+    // Reservation list to store reservations
+    let reservations = [];
 
     // Elements
     const grid = document.getElementById('grid');
     const subtotalEl = document.getElementById('subtotal');
     const totalEl = document.getElementById('total');
     const cartItemsEl = document.getElementById('cartItems');
+    const favoriteItemsEl = document.getElementById('favorite-items');
+    const noFavoritesMessageEl = document.getElementById('no-favorites-message');
+    const cartItemsListEl = document.getElementById('cart-items-list');
+    const noCartMessageEl = document.getElementById('no-cart-message');
+    const ordersSubtotalEl = document.getElementById('orders-subtotal');
+    const ordersTotalEl = document.getElementById('orders-total');
 
     // Helpers
-    const money = v => `$${v.toFixed(2)}`;
+    const money = v => `฿${v.toFixed(2)}`;
 
     function filterProducts(){
       return products.filter(p =>
@@ -293,6 +507,73 @@
       subtotalEl.textContent = money(subtotal);
       totalEl.textContent = money(subtotal + (cart.length?deliveryFee:0));
       localStorage.setItem('cart', JSON.stringify(cart));
+      
+      // Also update the Orders tab if it's active
+      if (document.getElementById('orders-content').classList.contains('active')) {
+        renderOrdersTab();
+      }
+    }
+
+    function renderFavorites() {
+      favoriteItemsEl.innerHTML = '';
+      if (favorites.size === 0) {
+        noFavoritesMessageEl.style.display = 'block';
+        return;
+      }
+      noFavoritesMessageEl.style.display = 'none';
+
+      for (const favId of favorites) {
+        const p = products.find(x => x.id === favId);
+        if (!p) continue;
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'favorite-item';
+        itemDiv.innerHTML = `
+          <img src="${p.image}" alt="${p.name}">
+          <div class="favorite-item-details">
+            <div class="name">${p.name}</div>
+            <div class="price">${money(p.price)}</div>
+          </div>
+          <button class="heart active" data-id="${p.id}" title="Remove from favorites" aria-label="Remove from favorites">
+            ${heartSvg()}
+          </button>
+        `;
+        favoriteItemsEl.appendChild(itemDiv);
+      }
+    }
+
+    function renderOrdersTab() {
+      cartItemsListEl.innerHTML = '';
+      let subtotal = 0;
+      
+      if (cart.length === 0) {
+        noCartMessageEl.style.display = 'block';
+        document.getElementById('cart-summary').style.display = 'none';
+        return;
+      }
+      
+      noCartMessageEl.style.display = 'none';
+      document.getElementById('cart-summary').style.display = 'block';
+
+      for (const line of cart){
+        const p = products.find(x=>x.id===line.id);
+        if (!p) continue;
+        subtotal += p.price * line.qty;
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'order-item';
+        itemDiv.innerHTML = `
+          <img src="${p.image}" alt="${p.name}">
+          <div class="order-item-details">
+            <div class="name">${p.name}</div>
+            <div class="qty">Quantity: ${line.qty}</div>
+            <div class="price">${money(p.price * line.qty)}</div>
+          </div>
+          <button class="remove" title="Remove from cart" aria-label="Remove from cart" data-del="${p.id}">×</button>
+        `;
+        cartItemsListEl.appendChild(itemDiv);
+      }
+      
+      ordersSubtotalEl.textContent = money(subtotal);
+      ordersTotalEl.textContent = money(subtotal + deliveryFee);
     }
 
     // Event delegation for grid and cart
@@ -303,6 +584,25 @@
       }
       const add = e.target.closest('[data-add]');
       if (add){ addToCart(add.dataset.add); }
+    });
+
+    // Event delegation for favorites tab
+    favoriteItemsEl.addEventListener('click', (e) => {
+      const fav = e.target.closest('.heart');
+      if (fav) {
+        const id = fav.dataset.id;
+        toggleFavorite(id);
+      }
+    });
+
+    // Event delegation for orders tab
+    cartItemsListEl.addEventListener('click', (e) => {
+      const removeBtn = e.target.closest('.remove');
+      if (removeBtn) {
+        const id = removeBtn.getAttribute('data-del');
+        cart = cart.filter(x => x.id !== id);
+        renderCart(); // This will also update the Orders tab
+      }
     });
 
     cartItemsEl.addEventListener('click', (e)=>{
@@ -337,10 +637,13 @@
     function toggleFavorite(id){
       if (favorites.has(id)) favorites.delete(id); else favorites.add(id);
       localStorage.setItem('favorites', JSON.stringify([...favorites]));
-      renderProducts();
+      renderProducts(); // Re-render products to update heart icon
+      if (activeTab === 'favorites') { // Only re-render favorites if on that tab
+        renderFavorites();
+      }
     }
 
-    // Tabs
+    // Tabs for product categories
     document.querySelectorAll('.tab').forEach(btn=>{
       btn.addEventListener('click', ()=>{
         document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
@@ -348,6 +651,33 @@
         activeTab = btn.dataset.tab;
         renderProducts();
       })
+    });
+
+    // Navigation Tabs (Home, Favorites, Orders, Inbox, Settings)
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const targetTab = btn.dataset.navTab;
+        document.querySelectorAll('.tab-content').forEach(content => {
+          content.classList.remove('active');
+        });
+        document.getElementById(`${targetTab}-content`).classList.add('active');
+
+        // Specific rendering for each main tab
+        if (targetTab === 'home') {
+          activeTab = 'nearby'; // Reset product category tab for home
+          document.querySelector('.tabs .tab.active').classList.remove('active');
+          document.querySelector('.tabs button[data-tab="nearby"]').classList.add('active');
+          renderProducts();
+        } else if (targetTab === 'favorites') {
+          renderFavorites();
+        } else if (targetTab === 'orders') {
+          renderOrdersTab();
+        }
+        // Inbox and Settings content are static, no dynamic rendering needed here
+      });
     });
 
     // Search
@@ -363,14 +693,142 @@
     });
 
     document.getElementById('checkout').addEventListener('click', ()=>{
-      if (!cart.length) return alert('Your cart is empty.');
+      if (!cart.length) {
+        alert('Your cart is empty.');
+        return;
+      }
+
       alert('✅ Order placed! (demo)');
-      cart = []; renderCart();
+      cart = []; // Clear cart after checkout
+      renderCart();
+    });
+
+    // Checkout button in Orders tab
+    document.getElementById('orders-checkout').addEventListener('click', ()=>{
+      if (!cart.length) {
+        alert('Your cart is empty.');
+        return;
+      }
+
+      alert('✅ Order placed! (demo)');
+      cart = []; // Clear cart after checkout
+      renderCart();
     });
 
     // Initial render
     renderProducts();
     renderCart();
+    // No initial render for favorites/orders/inbox/settings as they are not the default active tab
+
+    // Reservation functionality
+    document.getElementById('restaurant-list').addEventListener('click', (e) => {
+      const card = e.target.closest('.card');
+      if (!card) return;
+      const restaurant = card.dataset.restaurant;
+      document.getElementById('selected-restaurant').textContent = restaurant;
+      document.getElementById('reservation-step1').style.display = 'none';
+      document.getElementById('reservation-step2').style.display = 'block';
+    });
+
+    document.getElementById('reservation-back').addEventListener('click', () => {
+      document.getElementById('reservation-step2').style.display = 'none';
+      document.getElementById('reservation-step1').style.display = 'block';
+    });
+
+    document.getElementById('reservation-confirm').addEventListener('click', () => {
+      const restaurant = document.getElementById('selected-restaurant').textContent;
+      const people = document.getElementById('reservation-people').value;
+      const date = document.getElementById('reservation-date').value;
+      if (!restaurant || !people || !date) {
+        alert('Please fill in all fields');
+        return;
+      }
+      // Date validation
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      const resDate = new Date(date);
+      resDate.setHours(0,0,0,0);
+      if (resDate < today) {
+        alert('make a valid reservation date');
+        return;
+      }
+      // Store reservation
+      const reservationObj = {
+        restaurant,
+        people,
+        date: new Date(date).toLocaleDateString(),
+        time: new Date(date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      reservations.push(reservationObj);
+      renderReservationList();
+      document.getElementById('reservation-summary').innerHTML = `
+        <strong>Restaurant:</strong> ${restaurant}<br>
+        <strong>People:</strong> ${people}<br>
+        <strong>Date:</strong> ${new Date(date).toLocaleDateString()}<br>
+        <strong>Time:</strong> ${new Date(date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+      `;
+      document.getElementById('reservation-step2').style.display = 'none';
+      document.getElementById('reservation-success').style.display = 'block';
+    });
+
+    function renderReservationList() {
+      const list = document.getElementById('reservation-list');
+      if (!list) return;
+      list.innerHTML = '';
+      if (reservations.length === 0) {
+        list.innerHTML = '<li style="color:var(--muted);">No reservations yet.</li>';
+        return;
+      }
+      for (const r of reservations) {
+        const li = document.createElement('li');
+        li.textContent = `${r.date} (${r.people} people) at ${r.restaurant}`;
+        list.appendChild(li);
+      }
+    }
+
+    // Initial render for reservation list
+    renderReservationList();
+
+    // Walk-in order grid (demo content)
+    const walkinProducts = [
+      { id: 'p1', name: 'Tom Yum Soup', price: 35, image: 'https://thaicaliente.com/wp-content/uploads/2022/01/Tom-Yum-Goong-Feature.jpg' },
+      { id: 'p2', name: 'Green Curry', price: 40, image: 'https://fullofplants.com/wp-content/uploads/2019/02/easy-vegan-thai-green-curry-spicy-20-minute-gluten-free-thumb-5.jpg' },
+      { id: 'p3', name: 'Pad See Ew', price: 38, image: 'https://thai-foodie.com/wp-content/uploads/2025/02/beef-pad-see-ew-plated-1024x1024.jpg' },
+      { id: 'p4', name: 'Massaman Curry', price: 42, image: 'https://thewoolfskitchen.com/wp-content/uploads/FullSizeRender-2-edited-e1691159377401.jpg' },
+    ];
+
+    function renderWalkinProducts() {
+      const grid = document.getElementById('walkin-grid');
+      grid.innerHTML = '';
+      for (const p of walkinProducts) {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.style = 'cursor:pointer';
+        card.innerHTML = `
+          <div class="thumb" style="height:120px;overflow:hidden">
+            <img src="${p.image}" alt="${p.name}" style="width:100%;height:auto;display:block">
+          </div>
+          <div class="body">
+            <div class="title">${p.name}</div>
+            <div class="price">${money(p.price)}</div>
+          </div>
+        `;
+        card.addEventListener('click', () => {
+          addToCart(p.id);
+          alert(`${p.name} added to cart`);
+        });
+        grid.appendChild(card);
+      }
+    }
+
+    // Initial render for walk-in products
+    renderWalkinProducts();
+
+    // Reservation success 'Back' button
+    document.getElementById('reservation-success').querySelector('button').addEventListener('click', function() {
+      document.getElementById('reservation-success').style.display = 'none';
+      document.getElementById('reservation-step1').style.display = 'block';
+    });
   </script>
 </body>
 </html>
